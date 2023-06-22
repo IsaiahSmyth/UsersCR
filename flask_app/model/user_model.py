@@ -18,7 +18,7 @@ class User:
 
     @classmethod
     def get_all(cls):
-        query = "SELECT * FROM user"
+        query = "SELECT * FROM user;"
         results = connectToMySQL(cls.DB).query_db(query)
         all_users = []
         for user in results:
@@ -29,3 +29,27 @@ class User:
     def add_user(cls, data):
         query = "INSERT INTO user (first_name, last_name, email) VALUES (%(first_name)s, %(last_name)s, %(email)s)"
         return connectToMySQL(cls.DB).query_db(query, data)
+
+    @classmethod
+    def update_user(cls, data):
+        query = """UPDATE user SET first_name = %(first_name)s, last_name = %(last_name)s, email = %(email)s, created_at = %(created_at)s
+        WHERE id = %(id)s ;"""
+
+        result = connectToMySQL(cls.DB).query_db(query, data)
+        return result
+
+    @classmethod
+    def get_one(cls, data):
+        query = """SELECT * FROM user WHERE id = %(id)s;"""
+
+        result = connectToMySQL(cls.DB).query_db(query, data)
+        return cls(result[0]) 
+    # Make an object out of the first dictionary in the list of Results.
+
+
+    @classmethod
+    def delete_user(cls, data):
+        query = """DELETE FROM user WHERE id = %(id)s ; """
+
+        result = connectToMySQL(cls.DB).query_db(query, data)
+        return result

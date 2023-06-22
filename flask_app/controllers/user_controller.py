@@ -7,7 +7,7 @@ from flask import render_template, redirect, session, request
 def Home():
     all_users = User.get_all()
     print(all_users)
-    return render_template('read.html', all_users = all_users)
+    return render_template('read(all).html', all_users = all_users)
 
 
 @app.route('/add_user')
@@ -23,10 +23,39 @@ def submit_form():
         'email': request.form['email'],
     }
     User.add_user(user)
-    
+
     return redirect('/')
 
-# @app.route('/show', methods=['POST'])
-# def show():
+# =================================================
+#       Update Routes
+#       Show Updae Form Route,
+#           Submit Update Form Route
+# =================================================
 
-#     return render_template('read.html')
+@app.route('/update/<int:id>')
+def update(id):
+    one_user = User.get_one({'id' : id})
+    return render_template ('edit.html', one_user = one_user)
+
+@app.route('/edit', methods=['POST'])
+def edit_form():
+    User.update_user(request.form)
+    return redirect ('/')
+
+@app.route('/read(one)/<int:id>')
+def show_edit_form(id):
+    # Use id from the parameter of the route, to inform our get_one method!
+    
+    one_user = User.get_one({'id' : id})
+    return render_template('read(one).html', one_user = one_user)
+
+
+
+# ==================================================
+#           Delete
+# ==================================================
+
+@app.route('/delete/<int:id>')
+def delete(id):
+    User.delete_user({'id' : id})
+    return redirect('/')
